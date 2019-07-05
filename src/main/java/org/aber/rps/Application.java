@@ -2,6 +2,7 @@ package org.aber.rps;
 
 import org.aber.rps.model.User;
 import org.aber.rps.rest.GameService;
+import org.aber.rps.rest.GameSessionImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,6 +27,7 @@ public class Application {
     public CommandLineRunner commandLineRunner(ApplicationContext applicationContext) {
         return args -> {
             GameService gameService = applicationContext.getBean(GameService.class);
+            gameService.setGameSession(new GameSessionImpl());
 
             try (Scanner cmdReader = new Scanner(System.in); User user = new User(cmdReader)) {
                 String gameResult = gameService.getGameResult(user);
@@ -42,6 +44,10 @@ public class Application {
                         case "Y": {
                             gameResult = gameService.getGameResult(user);
                             System.out.println(gameResult);
+                            break;
+                        }
+                        case "STATS": {
+                            System.out.println(gameService.getGameStats());
                         }
                     }
                 } while (!(decision.equals("NO") || decision.equals("N")));

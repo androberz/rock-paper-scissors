@@ -15,21 +15,34 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameService {
 
     private final ResponseGenerator responseGenerator;
+    private GameSession gameSession;
 
     @Autowired
     public GameService(ResponseGenerator responseGenerator) {
         this.responseGenerator = responseGenerator;
     }
 
+    @Autowired
+    public void setGameSession(GameSession gameSession) {
+        this.gameSession = gameSession;
+    }
+
     @GetMapping("/rps")
     @ResponseBody
     public String getGameResult(Player user) {
         Gesture userGesture = user.getGesture();
-        Gesture computerGesture = responseGenerator.generateGesture();
+        Gesture computerGesture = gameSession.getPrevComputerGesture().map(responseGenerator::generateNextGesture)
+                .orElse(responseGenerator.generateGesture());
 
         Result result = userGesture.getResult(computerGesture);
+
+        gameSession.addResult(new GameSessionImpl.GameResult(userGesture, computerGesture, result));
 
         return String.format("\nYour gesture: %s\nComputer gesture: %s\nResult: %s", userGesture, computerGesture, result);
     }
 
+    @GetMapping("/rps/stats")
+    public String getGameStats() {
+        return gameSession.getStats();
+    }
 }

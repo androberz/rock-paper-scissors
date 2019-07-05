@@ -20,7 +20,7 @@ public class ErrorHandler {
         return "Something went wrong, try again...";
     }
 
-    private static String getWrongInputMessage() {
+    public static String getWrongInputMessage() {
         return "Wrong input, try again...";
     }
 }

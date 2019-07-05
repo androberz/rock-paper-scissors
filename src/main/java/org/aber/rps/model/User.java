@@ -1,5 +1,7 @@
 package org.aber.rps.model;
 
+import org.aber.rps.rest.ErrorHandler;
+
 import java.util.Scanner;
 
 public class User implements Player, AutoCloseable {
@@ -16,7 +18,7 @@ public class User implements Player, AutoCloseable {
         try {
             return Gesture.valueOf(scanner.nextLine().toUpperCase());
         } catch (Exception ignored) {
-            System.err.println("Wrong input, try again ...");
+            System.err.println(ErrorHandler.getWrongInputMessage());
 
             return getGesture();
         }
