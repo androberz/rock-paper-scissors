@@ -10,6 +10,6 @@ public class WebUser implements Player {
 
     @Override
     public Gesture getGesture() {
-        return Gesture.valueOf(input);
+        return Gesture.valueOf(input.toUpperCase());
     }
 }
