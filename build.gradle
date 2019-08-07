@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+    id 'maven'
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+def langLevel = 1.8
+
+sourceCompatibility = langLevel
+targetCompatibility = langLevel
+
+group = 'org.aber.rps'
+version = '0.0.1-SNAPSHOT'
+
+sourceSets {
+    test {
+        groovy {
+            srcDirs = ["src/test/java"]
+        }
+    }
+}
+sourceSets.main.java.srcDirs = [
+        "src/main/java"
+]
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testCompile 'org.spockframework:spock-core:1.3-groovy-2.5'
+}
+
+task doBeforeTests {
+    doFirst() {
+        println '!!!!  Do before tests  !!!!'
+    }
+}
+
+task doAfterTests() {
+    doFirst() {
+        println '!!!!  Do after tests  !!!!'
+    }
+}
+
+build.dependsOn test
+build.dependsOn doBeforeTests
+build.dependsOn doAfterTests
+
+test.mustRunAfter doBeforeTests
+doAfterTests.mustRunAfter test
+
+
+
